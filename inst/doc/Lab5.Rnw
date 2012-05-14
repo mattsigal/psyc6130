@@ -1,0 +1,75 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 5}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+\item Enter the data separately for each group and investigate the distributions 
+\begin{center}
+<<fig=true>>=
+hs_less<-c(8,3,6,6,9,7,11,7,4,8,17,6,21,6,4,10,6,9)
+greater_hs<-c(7,12,7,6,7,18,15,11,8,7,8,13,12,11,16,15,30,11,10,7,8,25,3,9,5)
+hist(hs_less, breaks=10)
+@
+\end{center}
+
+
+\begin{center}
+<<fig=true>>=
+hist(greater_hs, breaks=10)
+shapiro.test(hs_less)
+shapiro.test(greater_hs)
+@
+\end{center}
+
+
+\item Run a two independent-samples $t$-test 
+<<>>=
+t.test(hs_less,greater_hs, var.equal=T)
+@
+
+\item Run a Welch two independent-samples t-test 
+<<>>=
+t.test(hs_less,greater_hs)
+@
+
+\item Run a Welch trimmed t-test (note that you must first run the Yuen and Winvar functions
+<<>>=
+library(psyc6130)
+yuen(hs_less,greater_hs)
+@
+
+\item Run a two independent samples Wilcoxon-Mann-Whitney test. Log/Square Root Transform the Data
+<<>>=
+wilcox.test(hs_less,greater_hs)
+log_hsless<-log(hs_less)
+log_greaterhs<-log(greater_hs)
+sqrt_hsless<-sqrt(hs_less)
+sqrt_greaterhs<-sqrt(greater_hs)
+@
+
+\item Also look at the rest
+\begin{center}
+<<fig=true>>=
+hist (log_hsless)
+shapiro.test (log_hsless)
+t.test(log_hsless,log_greaterhs, var.equal=T)
+t.test(log_hsless,log_greaterhs)
+@
+\end{center}
+
+\end{enumerate}
+
+\end{document} 

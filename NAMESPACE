@@ -1,0 +1,5 @@
+export(yuen, winvar ,t1way, linear.comparison, equivt)
+S3method(print, yuen)
+S3method(print, t1way)
+S3method(print, linear.comparison)
+S3method(print, equivt)

@@ -1,0 +1,153 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 2}
+\author{Rob Cribbie} %\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate} \item Input the data for the dependent and independent variables
+(METHOD 1)
+
+<<>>=
+test<-c(8,4,5,4,7,5,2,3,6,13,4,5,4,19,11,4,6,9,4,5,6,8,3,5,9,8,
+6,3,2,14,12,5,4,6,5,6,7,18,5,3,6,8,11,6,7,4,5)
+sex<-c(rep(1,24),rep(2,23))
+@
+
+\item Input the data for the dependent and independent variables (METHOD 2)
+
+<<eval=FALSE>>=
+library(foreign)
+dataex1<-read.spss(file.choose())
+attach(dataex1)
+@
+
+\item Create histograms
+
+\begin{center}
+<<>>=
+hist(test, breaks=15) #for all data
+@
+
+<<>>=
+hist(test[sex==1], breaks=15)
+@
+
+<<>>=
+hist(test[sex==2], breaks=15)
+@
+\end{center}
+
+\item Create stem and leaf plots
+
+<<>>=
+stem(test) # for all data
+stem(test[sex==1])
+stem(test[sex==2])
+@
+
+\item Create boxplots
+\begin{center}
+<<>>=
+boxplot (test) # for all data
+@
+<<>>=
+boxplot(test[sex==1])
+@
+<<>>=
+boxplot(test[sex==2])
+@
+\end{center}
+
+<<>>=
+library(lattice)
+densityplot(test[sex==1])
+@
+
+\begin{center}
+<<echo=FALSE>>=
+print(densityplot(test[sex==1]))
+@
+\end{center}
+
+<<>>=
+densityplot(test[sex==2])
+@
+
+\begin{center}
+<<echo=FALSE>>=
+print(densityplot(test[sex==2]))
+@
+\end{center}
+
+\item Conduct D'Agostino's tests of normality
+<<>>=
+library(fBasics)
+dagoTest(test[sex==1])
+dagoTest(test[sex==2])
+@
+
+\item Transform the data with a square root transformation
+
+\begin{center}
+<<>>=
+test_sq<-sqrt(test)
+hist(test_sq[sex==1], breaks=10)
+@
+\end{center}
+
+\begin{center}
+<<>>=
+hist(test_sq[sex==2], breaks=10)
+dagoTest(test_sq[sex==1])
+dagoTest(test_sq[sex==2])
+@
+\end{center}
+
+\item Transform the data with a log transformation
+\begin{center}
+<<>>=
+test_ln<-log(test)
+hist(test_ln[sex==1], breaks=10)
+@
+\end{center}
+
+\begin{center}
+<<>>=
+hist(test_ln[sex==2], breaks=10)
+dagoTest(test_ln[sex==1])
+dagoTest(test_ln[sex==2])
+@
+\end{center}
+
+\item Compute descriptive statistics separately by group
+<<>>=
+mean(test[sex==1])
+mean(test[sex==2])
+median(test[sex==1])
+median(test[sex==2])
+var(test[sex==1])
+var(test[sex==2])
+sd(test[sex==1])
+sd(test[sex==2])
+mean(test_ln[sex==1])
+mean(test_ln[sex==2])
+median(test_ln[sex==1])
+median(test_ln[sex==2])
+var(test_ln[sex==1])
+var(test_ln[sex==2])
+sd(test_ln[sex==1])
+sd(test_ln[sex==2])
+@
+\end{enumerate}
+
+\end{document}

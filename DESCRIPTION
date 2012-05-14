@@ -1,0 +1,14 @@
+Package: psyc6130
+Version: 1.0-0
+Date: 2010-11-14
+Type: Package
+Title: Package for PSYC6130
+Author: Rob Cribbie <cribbie@yorku.ca>, Rand Wilcox, and Phil Chalmers <rphilip.chalmers@gmail.com>
+Maintainer: Rob Cribbie <cribbie@yorku.ca>
+Description: Contains data, functions, and help files
+Depends: car
+Imports: car, contrast, sandwich, fBasics, vcd, epitools, lawstat
+Suggests: gregmisc, contrast, sandwich, QuantPsyc, vcd, lawstat
+License: NA
+LazyData: yes
+URL: http://www.psych.yorku.ca/cribbie/6130/6130.html

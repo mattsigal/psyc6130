@@ -1,0 +1,105 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 6}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+\item Call the data from the \R{psyc6130} package and attach it. Then view the Sex variable
+\begin{center}
+<<fig=true>>=
+data(nonnorm_hetvar)
+attach(nonnorm_hetvar)
+hist(depres[Sex=="female"], breaks=10)
+@
+\end{center}
+
+\begin{center}
+<<fig=true>>=
+hist(depres[Sex=="male"], breaks=10)
+shapiro.test(depres[Sex=="female"])
+shapiro.test(depres[Sex=="male"])
+@
+\end{center}
+
+\item Run a two independent-samples t-test
+<<>>=
+t.test(depres[Sex=="female"],depres[Sex=="male"], var.equal=T)
+@
+
+\item Run a Welch two independent-samples t-test
+<<>>=
+t.test(depres[Sex=="female"],depres[Sex=="male"], var.equal=F)
+@
+
+\item Run a Welch trimmed t-test (note that you must first run the Yuen and Winvar functions
+<<>>=
+yuen(depres[Sex=="female"],depres[Sex=="male"])
+@
+
+\item Log/Square Root Transform the Data
+<<>>=
+log_dep<-log(depres)
+sqrt_dep<-sqrt(depres)
+@
+
+Also look at males
+<<fig=true>>=
+hist (sqrt_dep[Sex=="female"])
+shapiro.test (sqrt_dep[Sex=="female"])
+t.test(log_dep[Sex=="female"],log_dep[Sex=="male"], var.equal=T)
+t.test(log_dep[Sex=="female"],log_dep[Sex=="male"])
+@
+
+\item Rank the Data and Run standard and Welch t-tests
+<<>>=
+rankdep<-rank(depres)
+t.test(rankdep[Sex=="female"],rankdep[Sex=="male"], var.equal=T)
+t.test(rankdep[Sex=="female"],rankdep[Sex=="male"])
+@
+
+\item Resampled Two Independent-Sample Test
+<<eval=false>>=
+set.seed(1234)
+x<-depres[Sex=="female"]
+y<-depres[Sex=="male"]
+numsamp<-10000
+xn<-length(x)
+meanx<-mean(x)
+yn<-length(y)
+meany<-mean(y)
+diffmean<-abs(meanx-meany)
+xy<-c(x,y)
+samp<-matrix(nrow=xn+yn, ncol=numsamp)
+diffxy<-matrix(nrow=1, ncol=numsamp)
+for (i in 1:numsamp) {
+    samp[,i]<-sample(xy,xn+yn,replace=F)
+    diffxy[,i]<-abs(mean(samp[1:xn,i])-mean(samp[(xn+1):(xn+yn),i]))
+}
+pval<-mean(diffxy>diffmean)
+pval
+@
+
+<<echo=false>>=
+print(0.0468)
+@
+
+
+\item Running the Two Independent Samples Test of Equivalence for Exer 5
+<<>>=
+equivt(depres[Sex=="female"],depres[Sex=="male"],2)
+@
+\end{enumerate}
+
+\end{document} 

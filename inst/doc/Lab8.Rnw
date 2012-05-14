@@ -1,0 +1,79 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 8}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item 
+<<>>=
+data(contrasts)
+attach(contrasts)
+names(contrasts)
+levels(major)
+@
+
+\item Conduct a one-way ANOVA F and one-way Welch F test 
+<<>>=
+oneway.test(achiev~major,var.equal=T)
+oneway.test(achiev~major)
+@
+
+\item Convert the data to list mode and run a one-way Welch F on trimmed means 
+<<>>=
+listdata<-list(achiev[major=="psychology"], achiev[major=="sociology"],
+  achiev[major=="speech communication"], achiev[major=="Physical/Health Education"],
+  achiev[major=="Social Work"])
+t1way(listdata)
+@
+
+\item Run a Kruskal-Wallis nonparametric one-way test and pairwise t-tests (with Bonferroni and Holm's corrections)
+<<>>=
+kruskal.test(achiev~major)
+pairwise.t.test(achiev,major,p.adjust.method="bonferroni", pool.sd=F)
+pairwise.t.test(achiev,major,p.adjust.method="holm", pool.sd=F)
+pairwise.t.test(achiev,major,p.adjust.method="none", pool.sd=F)
+@
+
+\item Conduct pairwise comparisons using Tukey's HSD, note that this uses the pooled standard error 
+<<>>=
+model1<-aov(achiev~major)
+TukeyHSD(model1)
+@
+
+\item Conduct complex contrasts, note that these use the pooled standard error 
+<<>>=
+contrasts(major)
+library(gregmisc)
+contrasts(major)<-make.contrasts(rbind(c(1,0,-.5,-.5,0),
+  c(1,-2,0,0,1),c(1,0,-1,-1,1),c(0,1,1,-1,-1)))
+model2<-lm(achiev~major)
+summary(model2)
+@
+
+\item Adjust the p-values using the Bonferroni and Holm methods 
+<<>>=
+p.adjust(c(9.9e-07,.234878,.000218,.778636), method="bonferroni")
+p.adjust(c(9.9e-07,.234878,.000218,.778636), method="holm")
+@
+
+\item Linear Complex Comparisons Not Assuming Equal Variances 
+<<>>=
+linear.comparison(achiev,major,c.weights=list(c(1,0,-.5,-.5,0),c(1,-2,0,0,1),
+  c(1,0,-1,-1,1),c(0,1,1,-1,-1)),var.equal=F)
+@
+\end{enumerate}
+
+\end{document} 

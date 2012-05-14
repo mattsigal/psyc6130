@@ -1,0 +1,75 @@
+\documentclass[10pt]{article} 
+\usepackage{AMSmath, AMSsymb} 
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|} 
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 3} 
+\author{Rob Cribbie} %\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Enter the data from Question 2 into a matrix
+<<>>=
+tvtab<-matrix(c(22,4,32,12,31,21,10,8),nrow=2,ncol=4, byrow=T, dimnames=list(
+    c("rural","urban"),c("com","sf","drama","cart")))
+@
+
+\item Compute a chi-square test of independence and Fisher exact test
+<<>>=
+chisq.test(tvtab)
+fisher.test(tvtab)
+@
+
+\item load the vcd package which will give us Cramer's V and Kappa statistics
+<<>>=
+library(vcd)
+@
+
+\item Compute Cramer's V
+<<>>=
+assocstats(tvtab)
+@
+
+\item Compute chi-square goodness of fit tests for Question 2b
+<<>>= 
+chisq.test(tvtab[,1])
+chisq.test(tvtab[,2])
+chisq.test(tvtab[,3])
+chisq.test(tvtab[,4])
+@
+
+\item load the epitools package which has an odds ratio test 
+<<>>= 
+library(epitools) 
+@
+
+\item Calculate the 2X2 odds ratio for rural and urban individuals preferring a comedy vs
+    a drama 
+<<>>= 
+oddsratio(tvtab[,c(1,3)]) 
+@
+
+\item Enter the data from Question 3 into a matrix 
+<<>>=
+ratingdata<-matrix(c(12,2,0,3,29,2,1,2,23), nrow=3,ncol=3,byrow=T,dimnames=list(
+    c("dating","friends","NR"),c(1,2,3))) 
+ratingdata 
+@
+
+\item Compute the Kappa inter-rater reliability statistic using the Kappa test from the
+    vcd package 
+<<>>= 
+Kappa(ratingdata) 
+@
+
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,2 @@
+install.packages(c('car','contrast','sandwich','fBasics','vcd','epitools','lawstat',
+	'gregmisc','QuantPsyc'))

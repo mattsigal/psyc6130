@@ -1,0 +1,68 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 4}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Do Univariate IQs differ from 100?
+<<>>=
+univiq<-c(102, 113, 94, 109, 119, 129, 104, 91, 103, 115, 112, 116)
+mean(univiq)
+shapiro.test(univiq)
+@
+
+\item Run a one-sample t-test and Wilcoxon signed ranks test to determine if the mean univariate iq differs from 100
+<<>>=
+t.test(univiq, mu=100)
+wilcox.test(univiq, mu=100)
+@
+
+\item Do attitudes toward the Maple Leafs differ within and outside city limits
+<<>>=
+ml_attit<-c(19, 12, 15, 7, 12, 11, 4, 5, 15, 12, 9, 7, 8, 5, 7, 6, 7, 7, 9)
+location<-c(rep(1, 12), rep(2, 7))
+@
+
+\item Levene's test of homogeneity of variances
+<<>>=
+library(lawstat)
+levene.test(ml_attit, location)
+@
+
+\item Ratio of the variances
+<<>>=
+var(ml_attit[location==1])/var(ml_attit[location==2])
+@
+
+\item Two Independent Samples t-test
+<<>>=
+t.test(ml_attit[location==1], ml_attit[location==2], var.equal=T, conf.level=.95)
+@
+
+\item Welch Two Independent Samples t-test
+<<>>=
+t.test(ml_attit[location==1], ml_attit[location==2], conf.level=.95)
+@
+
+\item Computing eta-squared and omega squared for the Welch t-test
+<<>>=
+model<-t.test(ml_attit[location==1], ml_attit[location==2])
+model$statistic^2/(model$statistic^2 + model$parameter)
+(model$statistic^2 - 1)/(model$statistic^2 + model$parameter + 1)
+@
+\end{enumerate}
+
+\end{document} 

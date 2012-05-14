@@ -1,0 +1,90 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 7}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Question 1 
+\begin{center}
+<<fig=true>>=
+data(one_way)
+attach(one_way)
+levels(educ)
+hist(supp_ont[educ=="less HS"])
+@
+<<fig=true>>=
+hist(supp_ont[educ=="HS"])
+@
+<<fig=true>>=
+hist(supp_ont[educ=="Col_Univ"])
+@
+<<>>=
+var(supp_ont[educ=="less HS"])
+var(supp_ont[educ=="HS"])
+var(supp_ont[educ=="Col_Univ"])
+oneway.test(supp_ont~educ, var.equal=T)
+oneway.test(supp_ont~educ)
+@
+<<fig=true>>=
+hist(supp_que[educ=="less HS"])
+@
+<<fig=true>>=
+hist(supp_que[educ=="HS"])
+@
+<<fig=true>>=
+hist(supp_que[educ=="Col_Univ"])
+var(supp_que[educ=="less HS"])
+var(supp_que[educ=="HS"])
+var(supp_que[educ=="Col_Univ"])
+oneway.test(supp_que~educ, var.equal=T)
+kruskal.test(supp_que~educ)
+@
+\end{center}
+
+
+\item Question 2
+\begin{center}
+<<fig=true>>=
+detach(one_way)
+data(nhl_data)
+attach(nhl_data)
+names(nhl_data)
+hist(Points[Pos=="Center"])
+@
+<<fig=true>>=
+hist(Points[Pos=="Left Wing"])
+@
+<<fig=true>>=
+hist(Points[Pos=="Right Wing"])
+@
+<<fig=true>>=
+hist(Points[Pos=="Defense"])
+tapply(Points,Pos,var)
+tapply(Points,Pos,length)
+oneway.test(Points~Pos)
+oneway.test(rank(Points)~Pos)
+ptslist<-list(Points[Pos=="Center"],Points[Pos=="Left Wing"],
+    Points[Pos=="Right Wing"], Points[Pos=="Defense"])
+t1way(ptslist)
+tapply(rank(Points),Pos,mean)
+pairwise.t.test(rank(Points),Pos,p.adjust.method="none")
+@
+\end{center}
+
+
+\end{enumerate}
+
+\end{document} 
