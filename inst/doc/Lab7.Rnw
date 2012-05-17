@@ -19,16 +19,17 @@
 
 \item Question 1 
 \begin{center}
-<<fig=true>>=
+<<>>=
+library(psyc6130)
 data(one_way)
 attach(one_way)
 levels(educ)
 hist(supp_ont[educ=="less HS"])
 @
-<<fig=true>>=
+<<>>=
 hist(supp_ont[educ=="HS"])
 @
-<<fig=true>>=
+<<>>=
 hist(supp_ont[educ=="Col_Univ"])
 @
 <<>>=
@@ -38,13 +39,13 @@ var(supp_ont[educ=="Col_Univ"])
 oneway.test(supp_ont~educ, var.equal=T)
 oneway.test(supp_ont~educ)
 @
-<<fig=true>>=
+<<>>=
 hist(supp_que[educ=="less HS"])
 @
-<<fig=true>>=
+<<>>=
 hist(supp_que[educ=="HS"])
 @
-<<fig=true>>=
+<<>>=
 hist(supp_que[educ=="Col_Univ"])
 var(supp_que[educ=="less HS"])
 var(supp_que[educ=="HS"])
@@ -57,20 +58,20 @@ kruskal.test(supp_que~educ)
 
 \item Question 2
 \begin{center}
-<<fig=true>>=
+<<>>=
 detach(one_way)
 data(nhl_data)
 attach(nhl_data)
 names(nhl_data)
 hist(Points[Pos=="Center"])
 @
-<<fig=true>>=
+<<>>=
 hist(Points[Pos=="Left Wing"])
 @
-<<fig=true>>=
+<<>>=
 hist(Points[Pos=="Right Wing"])
 @
-<<fig=true>>=
+<<>>=
 hist(Points[Pos=="Defense"])
 tapply(Points,Pos,var)
 tapply(Points,Pos,length)

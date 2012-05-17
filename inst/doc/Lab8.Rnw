@@ -19,6 +19,7 @@
 
 \item 
 <<>>=
+library(psyc6130)
 data(contrasts)
 attach(contrasts)
 names(contrasts)

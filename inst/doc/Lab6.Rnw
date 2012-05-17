@@ -18,7 +18,8 @@
 \begin{enumerate}
 \item Call the data from the \R{psyc6130} package and attach it. Then view the Sex variable
 \begin{center}
-<<fig=true>>=
+<<>>=
+library(psyc6130)
 data(nonnorm_hetvar)
 attach(nonnorm_hetvar)
 hist(depres[Sex=="female"], breaks=10)
@@ -26,7 +27,7 @@ hist(depres[Sex=="female"], breaks=10)
 \end{center}
 
 \begin{center}
-<<fig=true>>=
+<<>>=
 hist(depres[Sex=="male"], breaks=10)
 shapiro.test(depres[Sex=="female"])
 shapiro.test(depres[Sex=="male"])
@@ -55,7 +56,7 @@ sqrt_dep<-sqrt(depres)
 @
 
 Also look at males
-<<fig=true>>=
+<<>>=
 hist (sqrt_dep[Sex=="female"])
 shapiro.test (sqrt_dep[Sex=="female"])
 t.test(log_dep[Sex=="female"],log_dep[Sex=="male"], var.equal=T)
@@ -70,7 +71,7 @@ t.test(rankdep[Sex=="female"],rankdep[Sex=="male"])
 @
 
 \item Resampled Two Independent-Sample Test
-<<eval=false>>=
+<<eval=FALSE>>=
 set.seed(1234)
 x<-depres[Sex=="female"]
 y<-depres[Sex=="male"]
@@ -91,7 +92,7 @@ pval<-mean(diffxy>diffmean)
 pval
 @
 
-<<echo=false>>=
+<<echo=FALSE>>=
 print(0.0468)
 @
 

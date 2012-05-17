@@ -18,7 +18,7 @@
 \begin{enumerate}
 \item Enter the data separately for each group and investigate the distributions 
 \begin{center}
-<<fig=true>>=
+<<>>=
 hs_less<-c(8,3,6,6,9,7,11,7,4,8,17,6,21,6,4,10,6,9)
 greater_hs<-c(7,12,7,6,7,18,15,11,8,7,8,13,12,11,16,15,30,11,10,7,8,25,3,9,5)
 hist(hs_less, breaks=10)
@@ -27,7 +27,7 @@ hist(hs_less, breaks=10)
 
 
 \begin{center}
-<<fig=true>>=
+<<>>=
 hist(greater_hs, breaks=10)
 shapiro.test(hs_less)
 shapiro.test(greater_hs)
@@ -62,7 +62,7 @@ sqrt_greaterhs<-sqrt(greater_hs)
 
 \item Also look at the rest
 \begin{center}
-<<fig=true>>=
+<<>>=
 hist (log_hsless)
 shapiro.test (log_hsless)
 t.test(log_hsless,log_greaterhs, var.equal=T)
