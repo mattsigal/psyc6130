@@ -1,18 +1,51 @@
+#' Yuen's test
+#'
+#' Perform Yuen's test for trimmed means on the data in x and y.
+#'
+#'  @section If variances are assumed to differ across groups, the routine calculates MS-within and adjusts
+#'  df-within using procedures developed by Welch (1938) & Shatterwaite (1946), as described in Maxwell &
+#'   Delaney (2004; Designing Experiments and Analyzing Data), pages 165-168
+#' @return Returns a list with items 
+#' \item{ci }{Lower and upper confidence intervals for the trimmed mean.}
+#' \item{p.value }{Yuen's p-value.}
+#' \item{dif }{Mean difference}
+#' \item{se }{Standard Error}
+#' \item{teststat }{The calculated test statistic}
+#' \item{crit}{The critical value}
+#' \item{df}{The degrees of freedom} 
+#'   
+#'   
+#' @aliases yuen
+#' @param x Numeric data vector for group 1.  
+#' @param y Numeric data for vector group 2.  
+#' @param tr Amount of data to truncate; default is .2.  
+#' @param alpha Alpha value; default is .05.  
+#' @export yuen
+#' @author Rand Wilcox, Rob Cribbie and Phil Chalmers 
+#' @examples
+#' \dontrun{
+#' hs_less<-c(8,3,6,6,9,7,11,7,4,8,17,6,21,6,4,10,6,9)
+#' greater_hs<-c(7,12,7,6,7,18,15,11,8,7,8,13,12,11,16,15,30,11,10,7,8,25,3,9,5)
+#' 
+#' ### Run a Welch trimmed t-test
+#' yuen(hs_less,greater_hs)
+#' }
+#'  
 yuen <-
 function(x,y,tr=.2,alpha=.05){
-#
-#  Perform Yuen's test for trimmed means on the data in x and y.
-#  The default amount of trimming is 20%
-#  Missing values (values stored as NA) are automatically removed.
-#
-#  A confidence interval for the trimmed mean of x minus the 
-#  the trimmed mean of y is computed and returned in yuen$ci.
-#  The p-value is returned in yuen$p.value
-#
-#  For an omnibus test with more than two independent groups, 
-#  use t1way.
-#  This function uses winvar from chapter 2.
-#
+    #
+    #  Perform Yuen's test for trimmed means on the data in x and y.
+    #  The default amount of trimming is 20%
+    #  Missing values (values stored as NA) are automatically removed.
+    #
+    #  A confidence interval for the trimmed mean of x minus the 
+    #  the trimmed mean of y is computed and returned in yuen$ci.
+    #  The p-value is returned in yuen$p.value
+    #
+    #  For an omnibus test with more than two independent groups, 
+    #  use t1way.
+    #  This function uses winvar from chapter 2.
+    #
 if(tr==.5)stop("Using tr=.5 is not allowed; use a method designed for medians")
 if(tr>.25)print("Warning: with tr>.25 type I error control might be poor")
 x<-x[!is.na(x)]  # Remove any missing values in x 
@@ -34,6 +67,9 @@ class(ret) <- 'yuen'
 ret
 }
 
+#' @S3method print yuen
+#' @rdname yuen
+#' @method print yuen
 print.yuen <- function(x){
   cat('\n\tYuen\'s t-test \n\n')
   cat('Proportion trimmed =', x$trim, '\n')

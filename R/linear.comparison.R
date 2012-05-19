@@ -1,31 +1,57 @@
+#' Linear comparisons
+#'
+#' Computes an F test for a linear comparison among group means. Uses procedures described in Maxwell &
+#'  Delaney (2004; Designing Experiments and Analyzing Data), pages 1157-1162. This routine is suitable for
+#'   one-way designs.
+#'
+#' @section If variances are assumed to differ across groups, the routine calculates MS-within and adjusts
+#'  df-within using procedures developed by Welch (1938) & Shatterwaite (1946), as described in Maxwell &
+#'   Delaney (2004; Designing Experiments and Analyzing Data), pages 165-168
+#' @aliases linear.comparison
+#' @param y Dependent variable
+#' @param group Grouping variable
+#' @param c.weights A list containing weights for multiple linear contrasts; or a numeric vector containing
+#'   weights for 1 contrast
+#' @param alpha compute 100*(1-alpha)\% confidence interval; default is 0.05
+#' @param var.equal logical. Are the variances equal? Default is \code{TRUE}.
+#' @export linear.comparison
+#' @author Rob Cribbie and Phil Chalmers 
+#' @examples
+#' \dontrun{
+#' data(contrasts)
+#' attach(contrasts)
+#'
+#' linear.comparison(achiev,major,c.weights=list(c(1,0,-.5,-.5,0),
+#'  c(1,-2,0,0,1),c(1,0,-1,-1,1),c(0,1,1,-1,-1)),var.equal=F)
+#'  }
 linear.comparison <-
 function(y,group,c.weights,alpha=0.05,var.equal=TRUE){
-#
-# Computes an F test for a linear comparison among group means
-# Uses procedures described in Maxwell & Delaney (2004; Designing Experiments
-# and Analyzing Data), pages 157-1162.
-#
-# If variances are assumed to differ across groups, the routine calculates
-# MS_within and adjusts df_within using procedures developed by Welch (1938) & Shatterwaite (1946),
-# as described in Maxwell & Delaney (2004; Designing Experiments and Analyzing
-# Data), pages 165-168.
-#
-# This routine is suitable for one.way designs.
-#
-# y: dependent variable
-# group: grouping variable
-#c.weights: a list containing weights for multiple linear contrasts; or a numeric vector containg weights for 1 contrast
-#alpha: compute 100*(1-alpha)% confidence interval; default is 0.05
-#
-#
-# EXAMPLE:
-## assuming there are 4 groups:
-#linear.contrast(y=myScores,group=myGroups,c.weights=list(c(-1,-1,-1,3)),var.equal=FALSE)
-#
-#my.contrasts <- list(c(-1,-1,-1,3),c(-1,-1,2,0),c(-1,1,0,0) );
-#linear.contrast(y=myScores,group=myGroups,c.weights=my.contrasts,var.equal=FALSE)
-#
-#
+    #
+    # Computes an F test for a linear comparison among group means
+    # Uses procedures described in Maxwell & Delaney (2004; Designing Experiments
+    # and Analyzing Data), pages 157-1162.
+    #
+    # If variances are assumed to differ across groups, the routine calculates
+    # MS_within and adjusts df_within using procedures developed by Welch (1938) & Shatterwaite (1946),
+    # as described in Maxwell & Delaney (2004; Designing Experiments and Analyzing
+    # Data), pages 165-168.
+    #
+    # This routine is suitable for one.way designs.
+    #
+    # y: dependent variable
+    # group: grouping variable
+    #c.weights: a list containing weights for multiple linear contrasts; or a numeric vector containg weights for 1 contrast
+    #alpha: compute 100*(1-alpha)% confidence interval; default is 0.05
+    #
+    #
+    # EXAMPLE:
+    ## assuming there are 4 groups:
+    #linear.contrast(y=myScores,group=myGroups,c.weights=list(c(-1,-1,-1,3)),var.equal=FALSE)
+    #
+    #my.contrasts <- list(c(-1,-1,-1,3),c(-1,-1,2,0),c(-1,1,0,0) );
+    #linear.contrast(y=myScores,group=myGroups,c.weights=my.contrasts,var.equal=FALSE)
+    #
+    #
 
 if(var.equal==TRUE){
 #print("computing linear comparisons assuming equal variances among groups")
@@ -61,6 +87,9 @@ class(tmp) <- 'linear.comparison'
 tmp
 }
 
+#' @S3method print linear.comparison
+#' @rdname linear.comparison
+#' @method print linear.comparison
 print.linear.comparison <- function(x){
   cat('\n\t')
   X <- x[[1]]

@@ -3,12 +3,38 @@ Version: 1.0-0
 Date: 2010-11-14
 Type: Package
 Title: Package for PSYC6130
-Author: Rob Cribbie <cribbie@yorku.ca>, Rand Wilcox, and Phil Chalmers <rphilip.chalmers@gmail.com>
+Author: Rob Cribbie <cribbie@yorku.ca>, Rand Wilcox, and Phil Chalmers
+    <rphilip.chalmers@gmail.com>
 Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
 Description: Contains data, functions, and help files
-Depends: car
-Imports: car, contrast, sandwich, fBasics, vcd, epitools, lawstat
-Suggests: gregmisc, contrast, sandwich, QuantPsyc, vcd, lawstat
+Depends:
+    car
+Imports:
+    car,
+    contrast,
+    sandwich,
+    fBasics,
+    vcd,
+    epitools,
+    lawstat
+Suggests:
+    gregmisc,
+    contrast,
+    sandwich,
+    QuantPsyc,
+    vcd,
+    lawstat
 License: NA
 LazyData: yes
-URL: http://www.psych.yorku.ca/cribbie/6130/6130.html, git@github.com:philchalmers/psyc6130.git
+URL: http://www.psych.yorku.ca/cribbie/6130/6130.html,
+    git@github.com:philchalmers/psyc6130.git
+Collate:
+    'equivt.R'
+    'lc.var.equal.R'
+    'lc.var.unequal.R'
+    'linear.comparison.R'
+    'psyc6130.R'
+    't1way.R'
+    'winvar.R'
+    'yuen.R'
+    'tukey.R'

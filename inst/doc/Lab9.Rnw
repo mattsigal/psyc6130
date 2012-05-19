@@ -1,0 +1,95 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 9}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Create data
+<<>>=
+library(psyc6130)
+newdat <- data.frame(painrelief = c(
+1,1,2,3,1,
+2,4,5,4,3,
+4,5,1,5,3,
+4,2,3,3,2,
+1,4,1,2,2,
+3,1,2,1,2,
+1,2,2,3,4,
+2,4,3,1,3,
+4,2,5,2,5,
+2,1,3,3,2,
+5,4,5,2,4,
+3,4,5,3,5), medication = rep(c(rep('tylenol',15),rep('advil',15)),2), exercise = rep(c(rep('none',5),rep('moderate',5),rep('intense',5)),4))
+head(newdat)
+attach(newdat)
+model<-aov(painrelief~medication*exercise)
+summary(model)
+@
+
+\item Conduct all Simple Effect Tests for the Medication*Exercise Interaction
+<<>>=
+library(contrast)
+fm<-lm(painrelief~medication*exercise)
+contrast(fm, a=list(medication="tylenol", exercise = "none"),
+              b=list(medication = "advil", exercise = "none"))
+contrast(fm, a=list(medication="tylenol", exercise = "moderate"),
+              b=list(medication = "advil", exercise = "moderate"))
+contrast(fm, a=list(medication="tylenol", exercise = "intense"),
+              b=list(medication = "advil", exercise = "intense"))
+contrast(fm, a=list(medication="tylenol", exercise = "none"),
+              b=list(medication = "tylenol", exercise = "moderate"))
+contrast(fm, a=list(medication="tylenol", exercise = "none"),
+              b=list(medication = "tylenol", exercise = "intense"))
+contrast(fm, a=list(medication="tylenol", exercise = "moderate"),
+              b=list(medication = "tylenol", exercise = "intense"))
+contrast(fm, a=list(medication="advil", exercise = "none"),
+              b=list(medication = "advil", exercise = "moderate"))
+contrast(fm, a=list(medication="advil", exercise = "none"),
+              b=list(medication = "advil", exercise = "intense"))
+contrast(fm, a=list(medication="advil", exercise = "moderate"),
+              b=list(medication = "advil", exercise = "intense"))
+@
+
+%\item R Code for Second Dependent Variable - Painreliefb
+%<<>>=
+%fm2<-aov(painreliefb~medication*exercise)
+%anova(fm2)
+%@
+%
+%\item None vs Moderate Exercise
+%<<>>=
+%contrasts(exercise)<-c(1,-1,0)
+%fm2<-aov(painreliefb~medication*exercise)
+%summary.aov(fm2, split=list(exercise=list('none-mod'=1)))
+%@
+%
+%\item None vs Intense Exercise
+%<<>>=
+%contrasts(exercise)<-c(1,0,-1)
+%fm2<-aov(painreliefb~medication*exercise)
+%summary.aov(fm2, split=list(exercise=list('none-int'=1)))
+%@
+%
+%\item Moderate vs Intense Exercise
+%<<>>=
+%contrasts(exercise)<-c(0,1,-1)
+%fm2<-aov(painreliefb~medication*exercise)
+%summary.aov(fm2, split=list(exercise=list('mod-int'=1)))
+%@
+
+\end{enumerate}
+
+\end{document} 

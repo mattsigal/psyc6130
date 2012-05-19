@@ -1,5 +1,30 @@
-equivt <-
-function (x,y, equivint, alpha=.05,varequiv=FALSE, na.rm=TRUE, ...) {
+#' Equivalence Test
+#'
+#' Test for the equivalence of two groups with a given tolerable interval. If a significant effect is returned 
+#' for both t-values then there is evidence of equivalence. Allows for equal or unequal variances.
+#'
+#' @section \code{equivint} must be specified in the metric of the variables (i.e. not as a standard 
+#' deviation, percent different, etc).
+#' @aliases equivt
+#' @param x Numeric vector for group 1.
+#' @param y Numeric vector for group 2.
+#' @param equivint Equivalence interval.
+#' @param alpha Alpha value
+#' @param varequiv Logical. Are there equal variances? Default is \code{FALSE}.
+#' @param na.rm logical; remove missing data?
+#' @param ... Additional arguments to be passed to the function.
+#' @export equivt
+#' @author Rob Cribbie and Phil Chalmers 
+#' @examples
+#' \dontrun{
+#' data(nonnorm_hetvar)
+#' attach(nonnorm_hetvar)
+#' 
+#' #equivalence within 2 points
+#' eq <- 2
+#' equivt(depres[Sex=="female"],depres[Sex=="male"], eq)
+#' }
+equivt <- function (x,y, equivint, alpha=.05,varequiv=FALSE, na.rm=TRUE, ...) {
    if (na.rm)    x <- x[!is.na(x)]
    if (na.rm)    y <- y[!is.na(y)]
    if (varequiv==FALSE) {
@@ -36,6 +61,9 @@ function (x,y, equivint, alpha=.05,varequiv=FALSE, na.rm=TRUE, ...) {
        out
 }
 
+#' @S3method print equivt
+#' @rdname equivt
+#' @method print equivt
 print.equivt <- function(x){
   cat('\n\t',x[[1]],'\n\n',sep='')   
   cat('Equivalence interval:',x[[2]],'\n')
