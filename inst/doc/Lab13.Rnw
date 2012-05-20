@@ -1,0 +1,91 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 13}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Create data 
+<<>>=
+library(psyc6130)
+fath<-c(75,70,71,68,72,66,67,74,70,65,66,71,65)
+son<-c(67,71,68,70,71,65,68,73,68,68,69,70,65)
+mod1<-lm(son~fath)
+plot(fath,son,
+  main="Scatterplot of the Relationship between Fathers and Sons Heights")
+@
+
+\item Scatterplot with LOESS and OLS Regression Line
+<<>>=
+scatter.smooth(fath,son)
+abline(mod1)
+library(lattice)
+xyplot(son~fath,type=c("p","r","smooth"),col="purple")
+plot(mod1)
+@
+
+\item leverage
+<<>>=
+hatvalues(mod1)
+2*(1+1)/length(fath)  ### cutoff for leverage
+@
+
+\item Discrepancy - Studentized Residuals
+<<>>=
+rstudent(mod1)
+@
+
+\item Bonferroni corrected test of Studentized Deleted Residuals
+<<>>=
+outlierTest(mod1)
+@
+
+\item Influence - Cook's Distance
+<<>>=
+cooks.distance(mod1)
+4/(length(fath)-1)  ### cutoff for Cook's D
+@
+
+\item Plot of Studentized Residuals against Predicted (Fitted) Values
+<<>>=
+plot(mod1, which=1)
+@
+
+\item Histogram of the Residuals
+<<>>=
+hist(mod1$residuals)
+@
+
+\item Running the tests 
+<<>>=
+cor.test(fath,son)
+summary(mod1)
+@
+
+\item Running the tests without the first case
+<<>>=
+son_new<-son[-1]
+fath_new<-fath[-1]
+mod2<-lm(son_new~fath_new)
+plot(mod2)
+scatter.smooth(fath_new,son_new)
+abline(mod2)
+cor.test(fath_new,son_new)
+summary(mod2)
+@
+
+\end{enumerate}
+
+\end{document} 

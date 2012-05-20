@@ -1,0 +1,66 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 16}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Get data
+<<>>=
+library(psyc6130)
+data(satisf)
+attach(satisf)
+head(satisf)
+lsatisf <- log(satisf) #ambiguous! 
+lsatisf <- log(satisf$satisf) #better
+@
+
+\item Centering the Predictors and Creating the Interaction Term
+<<>>=
+hoursc<-hours-mean(hours)
+friendsc<-friends-mean(friends)
+inter<-hoursc*friendsc
+mod1<-lm(lsatisf~hoursc+friendsc+inter) ## same as mod1<-lm(lsatisf~hoursc*friendsc)
+summary(mod1)
+hours_cat<-cut(hoursc,2,labels=c("low","high"))
+friends_cat<-cut(friendsc,2,labels=c("low","high"))
+library(car)
+scatterplot(lsatisf~friendsc*hours_cat)  ## 'car' package
+scatterplot(lsatisf~hoursc*friends_cat) 
+@
+
+\item Interpret the Relationship by Changing the Scaling of the Predictors
+<<>>=
+friends2<-friendsc-sd(friendsc)
+inter2<-friends2*hoursc
+mod2<-lm(lsatisf~hoursc+friends2+inter2) ## Effect of Hours for a High # of Friends
+summary(mod2)
+friends3<-friendsc+sd(friendsc)
+inter3<-friends3*hoursc
+mod3<-lm(lsatisf~hoursc+friends3+inter3)  ## Effect of Hours for a Low # of Friends
+summary(mod3)
+hours2<-hoursc-sd(hoursc)
+inter2a<-hours2*friendsc
+mod4<-lm(lsatisf~hours2+friendsc+inter2a)  ## Effect of Friends for a High # of Hours Worked
+summary(mod4)
+hours3<-hoursc+sd(hoursc)
+inter3a<-hours3*friendsc
+mod5<-lm(lsatisf~hours3+friendsc+inter3a)  ## Effect of Friends for a Low # of Hours Worked
+summary(mod5)
+@
+
+\end{enumerate}
+
+\end{document} 

@@ -15,6 +15,8 @@
   \item{one_way}{One way ANOVA data-set.}
 
   \item{mixed_rep}{mixed-level data.}
+
+  \item{satisf}{friend-hours-satisfaction data.}
 }
 \value{
   All data-sets are \code{data.frame} objects.

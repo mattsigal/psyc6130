@@ -1,0 +1,170 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 14}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Question 1
+<<>>=
+library(psyc6130)
+anx<-c(19, 26, 34, 18, 17, 21, 33, 35, 29, 13, 25, 26, 22, 23, 12, 18, 17, 18, 21, 26)
+dep<-c(24, 28, 34, 12, 25, 29, 36, 31, 27, 32, 12, 19, 26, 22, 38, 21, 30, 15, 27, 28)
+perf<-c(28, 32, 14, 21, 14, 28, 16,   7, 25,   6, 25, 26, 32, 35,   1, 26, 15, 28, 26, 24)
+mod1<-lm(perf~anx)
+summary(mod1)
+plot(anx, perf)
+@
+
+\item Scatterplot with LOESS and OLS Regression Line
+<<>>=
+scatter.smooth(anx,perf)
+abline(mod1)
+library(lattice)
+xyplot(perf~anx,type=c("p","r","smooth"),col="purple")
+anx2<-anx^2
+mod1a<-lm(perf~anx+anx2)
+plot(mod1a)
+@
+
+\item leverage
+<<>>=
+hatvalues(mod1a)
+2*(1+1)/length(anx)  ### cutoff for leverage
+@
+
+\item Discrepancy - Studentized Residuals
+<<>>=
+rstudent(mod1a)
+@
+
+\item Bonferroni corrected test of Studentized Deleted Residuals)
+<<>>=
+outlierTest(mod1a)
+@
+
+\item Influence - Cook's Distance 
+<<>>=
+cooks.distance(mod1a)
+4/(length(anx)-1)  ### cutoff for Cook's D
+@
+
+\item Plot of Studentized Residuals against Predicted (Fitted) Values 
+<<>>=
+plot(mod1a, which=1)
+@
+
+\item Histogram of the Residuals 
+<<>>=
+hist(mod1a$residuals)
+@
+
+\item Running the tests
+<<>>=
+summary(mod1a)
+mod2<-lm(perf~dep)
+summary(mod2)
+plot(perf~dep)
+@
+
+\item leverage 
+<<>>=
+hatvalues(mod2)
+2*(1+1)/length(dep)  ### cutoff for leverage
+@
+
+\item Bonferroni corrected test of Studentized Deleted Residuals)
+<<>>=
+outlierTest(mod2)
+@
+
+\item Influence - Cook's Distance
+<<>>=
+cooks.distance(mod2)
+4/(length(anx)-1)  ### cutoff for Cook's D
+@
+
+\item Plot of Studentized Residuals against Predicted (Fitted) Values 
+<<>>=
+plot(mod1a, which=1)
+@
+
+\item Histogram of the Residuals
+<<>>=
+hist(mod1a$residuals)
+mod3<-lm(perf[-15]~dep[-15])
+perf[15]
+dep[15]
+plot(perf[-15]~dep[-15])
+summary(mod3)
+@
+
+\item Question 2
+<<>>=
+forg_can<-c(22,24,16,18,25,19,32,18,31,24,24,26,28,23,29,25)
+rep_can<-c(24,28,22,18,28,20,24,22,28,26,31,22,25,25,30,31)
+intent_can<-c(29,24,26,20,25,21,29,25,28,19,29,19,22,27,26,32)
+forg_us<-c(21,27,34,32,17,18,21,22,25,31,34,23,19,16,18)
+rep_us<-c(23,26,21,23,21,25,28,28,32,27,29,19,23,24,25)
+@
+
+\item Question a 
+<<>>=
+plot(forg_can,rep_can)
+cor.test(forg_can,intent_can)
+cor.test(forg_can,intent_can,method="spearman")
+@
+
+\item Question b 
+<<>>=
+rcanfr<-cor(forg_can,rep_can)
+rusfr<-cor(forg_us,rep_us)
+library(psych)
+r.test(n=length(forg_can),n2=length(forg_us),rcanfr,rusfr)
+@
+
+\item or 
+<<>>=
+fz_rcan<-log((1+rcanfr)/(1-rcanfr))/2
+fz_rus<-log((1+rusfr)/(1-rusfr))/2
+z<-(fz_rcan-fz_rus)/sqrt((1/(length(forg_can)-3))+(1/(length(forg_us)-3)))
+pval<-1-pnorm(abs(z))
+z
+pval
+pval*2
+@
+
+\item Question c 
+<<>>=
+r_rep<-cor(forg_can,rep_can)
+r_int<-cor(forg_can,intent_can)
+r_repint<-cor(rep_can,intent_can)
+r.test(length(rep_can),r12=r_rep,r13=r_int,r23=r_repint)
+@
+
+\item or
+<<>>=
+rmat<-matrix(c(1,r_rep,r_int,r_rep,1,r_repint,r_int,r_repint,1),nrow=3)
+t<-(r_rep-r_int)*sqrt(((length(forg_can)-1)*(1+r_repint))/(2*((length(forg_can)-1)/(length(forg_can)-3))*
+                                                           det(rmat)+((r_rep+r_int)^2/4)*(1-r_repint)^3))
+pval_t<-1-pt(t,length(forg_can)-3)
+t
+pval_t
+pval_t*2
+@
+
+\end{enumerate}
+
+\end{document} 

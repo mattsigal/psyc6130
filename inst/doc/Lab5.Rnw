@@ -17,22 +17,17 @@
 
 \begin{enumerate}
 \item Enter the data separately for each group and investigate the distributions 
-\begin{center}
 <<>>=
 hs_less<-c(8,3,6,6,9,7,11,7,4,8,17,6,21,6,4,10,6,9)
 greater_hs<-c(7,12,7,6,7,18,15,11,8,7,8,13,12,11,16,15,30,11,10,7,8,25,3,9,5)
 hist(hs_less, breaks=10)
 @
-\end{center}
 
-
-\begin{center}
 <<>>=
 hist(greater_hs, breaks=10)
 shapiro.test(hs_less)
 shapiro.test(greater_hs)
 @
-\end{center}
 
 
 \item Run a two independent-samples $t$-test 
@@ -61,14 +56,33 @@ sqrt_greaterhs<-sqrt(greater_hs)
 @
 
 \item Also look at the rest
-\begin{center}
 <<>>=
 hist (log_hsless)
 shapiro.test (log_hsless)
 t.test(log_hsless,log_greaterhs, var.equal=T)
 t.test(log_hsless,log_greaterhs)
 @
-\end{center}
+
+\item Resampled t-test example to find empirical $p$-value
+<<>>=
+numsamp<-1000
+x<-c(3,9,3,8,4,9,2,3,4)
+xn<-length(x)
+meanx<-mean(x)
+y<-c(5,7,8,7,6,9,8,7,8)
+yn<-length(y)
+meany<-mean(y)
+diffmean<-abs(meanx-meany)
+xy<-c(x,y)
+samp<-matrix(nrow=xn+yn, ncol=numsamp)
+diffxy<-matrix(nrow=1, ncol=numsamp)
+for (i in 1:numsamp) {
+   samp[,i]<-sample(xy,xn+yn,replace=F)
+   diffxy[,i]<-abs(mean(samp[1:xn,i])-mean(samp[(xn+1):(xn+yn),i]))
+}
+pval<-mean(diffxy>diffmean)
+pval
+@
 
 \end{enumerate}
 

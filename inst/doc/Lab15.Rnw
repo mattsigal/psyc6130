@@ -1,0 +1,129 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 15}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Create data
+<<>>=
+library(psyc6130)
+newdat <- matrix(c(50, 2 , 2 , 6 ,2 ,16 ,44 ,7 ,13 ,50 ,1 , 3 ,14 ,2 ,13 ,33 ,3 ,11 ,10 ,2 ,19 ,46 ,7 ,12 ,15 ,1 ,20 ,60 ,0 ,  3 ,12 ,5 ,12 ,12 ,2 ,17 ,56 ,1 , 2 , 8 ,5 ,16 ,38 ,2 , 6 ,45 ,6 ,10 ,25 ,3 ,16 , 0 ,1 ,20 ,10 ,1 ,17 ,55 ,1 , 2), ncol=3, byrow=TRUE)
+colnames(newdat) <- c('hours','friends','satisf')
+newdat <- data.frame(newdat)
+hist(newdat$satisf)
+newdat$lsatisf <- log(newdat$satisf)
+attach(newdat)
+plot(lsatisf, hours)
+@
+
+\item Look at Diagnostics for Original Model 
+<<>>=
+mod1<-lm(lsatisf~hours+friends)
+@
+
+
+\item leverage 
+<<>>=
+hatvalues(mod1)
+2*(2+1)/length(hours)  ### cutoff for leverage
+@
+
+
+\item Discrepancy - Studentized Residuals 
+<<>>=
+rstudent(mod1)
+@
+
+
+\item Bonferroni corrected test of Studentized Deleted Residuals)
+<<>>=
+outlier.test(mod1)
+@
+
+
+\item Influence - Cook's Distance 
+<<>>=
+cooks.distance(mod1)
+4/(length(hours)-2)  ### cutoff for Cook's D
+@
+
+
+\item Plot of Studentized Residuals against Predicted (Fitted) Values 
+<<>>=
+plot(mod1, which=1)
+@
+
+
+\item Histogram of the Residuals 
+<<>>=
+hist(mod1$residuals)
+cr.plots(mod1)
+@
+
+
+\item Analyze Original Model 
+<<>>=
+summary(mod1)
+library(QuantPsyc)
+lm.beta(mod1)
+@
+
+
+\item New Model Substituting Hours2 for Hours 
+<<>>=
+hours2 <- c(5,22,21,5,26,14,21,30,18,42,32,17,4,25,37,33,24,18,20,40)
+mod2<-lm(lsatisf~hours2+friends)
+hatvalues(mod1)
+2*(2+1)/length(hours2)  ### cutoff for leverage
+rstudent(mod2)
+outlier.test(mod2)
+cooks.distance(mod2)
+4/(length(hours2)-2)  ### cutoff for Cook's D
+plot(mod2, which=1)
+hist(mod2$residuals)
+cr.plots(mod2)
+@
+
+
+\item Remove Outlier and Re-Run Analyses 
+<<>>=
+newdat2<-subset(newdat, lsatisf!=3)
+detach(newdat)
+attach(newdat2)
+mod3<-lm(lsatisf~hours2+friends)
+hatvalues(mod3)
+2*(2+1)/length(hours2)  ### cutoff for leverage
+rstudent(mod3)
+outlier.test(mod3)
+cooks.distance(mod3)
+4/(length(hours2)-2)  ### cutoff for Cook's D
+plot(mod3, which=1)
+hist(mod3$residuals)
+cr.plots(mod3)
+@
+
+
+\item Create a new quadratic term for Hours2 and Run New Model 
+<<>>=
+hours2sqrd<-hours2^2
+mod4<-lm(lsatisf~friends+hours2+hours2sqrd)
+summary(mod4)
+lm.beta(mod4)
+@
+
+\end{enumerate}
+
+\end{document} 
