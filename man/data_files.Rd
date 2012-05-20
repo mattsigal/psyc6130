@@ -7,6 +7,8 @@
 
   \item{nhl_data}{NHL data from 2010.}
 
+  \item{twowaythreeway}{data for 2- and 3-way ANOVA.}
+
   \item{nonnorm_hetvar}{Non-normal data with heterogenous
   variance.}
 
