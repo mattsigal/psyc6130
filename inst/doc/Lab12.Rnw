@@ -1,0 +1,54 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 11}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Transform data to long
+<<>>=
+library(psyc6130)
+data(mixed_rep)
+newdat_long <- reshape(mixed_rep, direction="long", varying=list(names(mixed_rep)[2:5]),
+v.names="Value",  idvar="id", timevar="Time")
+newdat_long$Time<-as.factor(newdat_long$Time)
+attach(newdat_long)
+@ 
+
+\item Compound Symmetric Error Structure
+<<>>=
+library(nlme)
+mod1<-lme(Value ~ Time, random = ~ 1 | id)
+anova(mod1)
+summary(mod1)
+@
+
+\item First Order Auto-Regressive Error Structure 
+<<>>=
+mod2<-lme(Value ~ Time, random = ~ 1 | id, correlation = corAR1())
+anova(mod2)
+summary(mod2)
+@
+
+\item Follow up Tests Comparing Baseline to One Month
+<<>>=
+t.test(Value[Time==1],Value[Time==2], paired=T)
+wilcox.test(Value[Time==1],Value[Time==2], paired=T)
+paired_resample(Value[Time==1],Value[Time==2])
+@
+
+\end{enumerate}
+
+\end{document} 

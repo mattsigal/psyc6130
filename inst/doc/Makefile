@@ -1,7 +1,7 @@
 # Makefile to use knitr for package vignettes
 
 # put all PDF targets here, separated by spaces
-PDFS= Lab2.pdf Lab3.pdf Lab4.pdf Lab5.pdf Lab6.pdf Lab7.pdf Lab8.pdf
+PDFS= Lab2.pdf Lab3.pdf Lab4.pdf Lab5.pdf Lab6.pdf Lab7.pdf Lab8.pdf Lab9.pdf Lab10.pdf Lab11.pdf Lab 12.pdf
 
 all: $(PDFS) 
 

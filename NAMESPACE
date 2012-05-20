@@ -1,6 +1,8 @@
 export(equivt)
 export(linear.comparison)
+export(paired_resample)
 export(t1way)
+export(t2way)
 export(tukey)
 export(yuen)
 S3method(print,equivt)

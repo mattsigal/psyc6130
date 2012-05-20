@@ -38,3 +38,5 @@ Collate:
     'winvar.R'
     'yuen.R'
     'tukey.R'
+    't2way.R'
+    'paired_resample.R'

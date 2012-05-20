@@ -1,0 +1,65 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 11}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Question 1: Paired Samples t
+<<>>=
+library(psyc6130)
+time1<-c(3,3,4,5,6,5,7,1,3,3,4,6)
+time2<-c(5,8,9,6,6,3,9,3,3,5,6,7)
+t.test(time1,time2,paired=T)
+effsiz<-(mean(time1)-mean(time2))/sd(time1)
+effsiz
+@
+
+\item Question 2: One-way Repeated Measures
+<<>>=
+subject<-rep(1:9,each=3)
+week<-rep(1:3,9)
+severity<-c(7,7,6,11,9,4,9,5,4,8,6,2,10,9,3,8,6,5,6,5,1,9,7,3,8,8,7)
+mod1<-aov(severity~week+Error(subject/week))
+summary(mod1)
+week.1<-c(7,11,9,8,10,8,6,9,8)
+week.2<-c(7,9,5,6,9,6,5,7,8)
+week.3<-c(6,4,4,2,3,5,1,3,7)
+weeks<-c(1,2,3)
+weeks<-as.factor(weeks)
+idat<-data.frame(weeks)
+mod2<-lm(cbind(week.1,week.2,week.3)~1)
+aov2<-Anova(mod2, idata=idat, idesign=~weeks)
+summary(aov2, multivariate=F)
+@
+
+\item Follow-up tests for Question 2
+<<>>=
+t.test(week.1,week.2, paired=T)
+t.test(week.1,week.3, paired=T)
+t.test(week.2,week.3, paired=T)
+p1<-t.test(week.1,week.2, paired=T)$p.value
+p2<-t.test(week.1,week.3, paired=T)$p.value
+p3<-t.test(week.2,week.3, paired=T)$p.value
+@
+
+\item Impose FDR control over the three pairwise comparison tests
+<<>>=
+p.adjust(c(p1,p2,p3),method="fdr")
+@
+
+\end{enumerate}
+
+\end{document} 

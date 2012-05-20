@@ -13,6 +13,8 @@
   variance.}
 
   \item{one_way}{One way ANOVA data-set.}
+
+  \item{mixed_rep}{mixed-level data.}
 }
 \value{
   All data-sets are \code{data.frame} objects.

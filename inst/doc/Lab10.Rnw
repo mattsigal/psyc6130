@@ -1,0 +1,99 @@
+\documentclass[10pt]{article}
+\usepackage{AMSmath, AMSsymb}
+\usepackage{fullpage}
+\newcommand{\mysum}[0]{\displaystyle\sum} % \sum to subscripts rather than on the sides
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\R}[1]{{\texttt{#1}}}
+
+\title{Lab 10}
+\author{Rob Cribbie}
+%\date{Last complied in \LaTeX\ on \today}
+
+\begin{document}
+
+\maketitle
+
+\setkeys{Gin}{width=0.5\textwidth} %default Sweave figure size from here on
+
+\begin{enumerate}
+
+\item Question 1, create data
+<<>>=
+library(psyc6130)
+sex<-c(0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1)
+cond<-c(0,0,0,0,1,1,1,1,2,2,2,2,0,0,0,0,1,1,1,1,2,2,2,2)
+sex<-as.factor(sex)
+cond<-as.factor(cond)
+levels(sex)<-c("male","female")
+levels(cond)<-c("male_sh","control","female_sh")
+distance<-c(-1.51,0.04,-2.05,0.16,-0.12,0.39,-0.35,0.02,0.76,
+ -1.09,-2.54,-0.62,1.09,0.67,2.08,0.15,0.01,-1.15,-1.07,
+ -0.46,-1.47,0.96,-1.10,-0.27)
+newdat<-cbind(sex,cond,distance)
+@
+
+\item Analysis 
+<<>>=
+t2way(2,3,newdat,MAT=T)
+interaction.plot(cond,sex,distance)
+t1way(list(distance[sex=="male" & cond=="male_sh"],distance[sex=="female" &
+cond=="male_sh"]))
+t1way(list(distance[sex=="male" & cond=="control"],distance[sex=="female" &
+cond=="control"]))
+t1way(list(distance[sex=="male" & cond=="female_sh"],distance[sex=="female" &
+cond=="female_sh"]))
+@
+
+\item Run a traditional factorial ANOVA
+<<>>=
+mod1<-aov(distance~sex*cond)
+summary(mod1)
+@
+
+\item Question 2
+<<>>=
+data(twowaythreeway)
+attach(twowaythreeway) #sex is now masked, ambiguous which version of 'sex' should be used!
+detach(twowaythreeway) #detach
+levels(twowaythreeway$age) #index directly
+mod8<-aov(recyc3w~sex*age*commsize,twowaythreeway) #import dataset along with formula
+anova(mod8)
+mod8_errMS<-anova(mod8)[8,3] ## error term for overall model ###
+@
+
+\item Simple Interaction Test at Commsize=small
+<<>>=
+mod9<-aov(recyc3w~sex*age, subset(twowaythreeway, commsize == "small"))
+anova(mod9)
+small_ms_int<-anova(mod9)[3,3]
+small_F_int<-small_ms_int/mod8_errMS
+pf(small_F_int, 1, 24, lower.tail=F)
+@
+
+\item Simple Interaction and Simple Main Effect Tests at Commsize = medium
+<<>>=
+mod10<-aov(recyc3w~sex*age, subset(twowaythreeway, commsize == "medium"))
+anova(mod10)
+med_ms_int<-anova(mod10)[3,3]
+med_F_int<-med_ms_int/mod8_errMS
+pf(med_F_int, 1, 24, lower.tail=F)
+med_ms_sex<-anova(mod10)[1,3]
+med_F_sex<-med_ms_sex/mod8_errMS
+pf(med_F_sex, 1, 24, lower.tail=F)
+med_ms_age<-anova(mod10)[2,3]
+med_F_age<-med_ms_age/mod8_errMS
+pf(med_F_age, 1, 24, lower.tail=F)
+@
+
+\item Simple Interaction Test at Commsize=large
+<<>>=
+mod11<-aov(recyc3w~sex*age, subset(twowaythreeway, commsize == "large"))
+anova(mod11)
+large_ms_int<-anova(mod11)[3,3]
+large_F_int<-large_ms_int/mod8_errMS
+pf(large_F_int, 1, 24, lower.tail=F)
+@
+
+\end{enumerate}
+
+\end{document} 

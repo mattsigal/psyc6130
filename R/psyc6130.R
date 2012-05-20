@@ -30,6 +30,7 @@ NULL
 #' @param twowaythreeway data for 2- and 3-way ANOVA.
 #' @param nonnorm_hetvar Non-normal data with heterogenous variance.
 #' @param one_way One way ANOVA data-set.
+#' @param mixed_rep mixed-level data.
 #' @return All data-sets are \code{data.frame} objects.
 #' @usage 
 #' data(datasetName)
